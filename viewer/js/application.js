@@ -12,7 +12,8 @@ m_size = $('#ysize').val();
 if (m_size == 0) m_size = 10;
 fieldFactory($('#game_field'), n_size, m_size);
 }
-
+var startX=1, startY=1;
+var isFirstClick = true;
 function fieldFactory(parent_div, n, m){
   parent_div.empty();
   for (var i = 0; i < n; i++){
@@ -24,41 +25,22 @@ function fieldFactory(parent_div, n, m){
 	  });
     cell.appendTo(row);
 	
-	img = $('<div />',{class: 'image-unknown'});
+	img = $('<div />',{class: 'image-unknown', xcoord: (n - i), ycoord:(m - j)});
 	img.bind('click', function(){
-	                  var currentClass = $(this).attr('class');
-					  $(this).clearStyle;
-					  if (currentClass == 'image-unknown') {
-					      $(this).attr('class', 'image-wall');
-					  } 
-					  else if(currentClass == "image-wall")
-					  { 
-					     $(this).attr('class', 'image-ground');
-					  }
-					  else if(currentClass == "image-ground")
-					  { 
-					     $(this).attr('class', 'image-rock');
-					  }
-					  else if(currentClass == "image-rock")
-					  { 
-					     $(this).attr('class', 'image-lambda');
-					  }
-					  else if(currentClass == "image-lambda")
-					  { 
-					     $(this).attr('class', 'image-miner');
-					  }
-					  else if(currentClass == "image-miner")
-					  { 
-					     $(this).attr('class', 'image-lift');
-					  }
-					  else if(currentClass == "image-lift")
-					  { 
-					     $(this).attr('class', 'image-opened-lift');
-					  }
-					  else if(currentClass == "image-opened-lift")
-					  { 
-					     $(this).attr('class', 'image-unknown');
-					  }
+	    //if (input_mode == 'image-empty') 
+	    //    defaultClickHandling($(this));
+		//else {
+				if (isFirstClick) {
+				  startX = Number($(this).attr('xcoord'));
+				  startY = Number($(this).attr('ycoord'));
+				} else{
+				endX = Number($(this).attr('xcoord'));
+				
+				endY = Number($(this).attr('ycoord'));
+					drawLine(startX, startY, endX, endY) ;
+				}
+				isFirstClick = !isFirstClick;
+			//}
 					  //sendCommandToSocket("clicked on:"+$(this).parent().attr('xcoord')+','+$(this).parent().attr('ycoord')+'.');
 					  });
 	img.appendTo(cell);
@@ -67,6 +49,26 @@ function fieldFactory(parent_div, n, m){
 
 }
 
+
+
+function defaultClickHandling(el){
+	var currentClass = el.attr('class');
+	el.clearStyle;
+	if (currentClass == 'image-unknown') {
+	el.attr('class', 'image-wall');
+	} else if(currentClass == "image-wall"){ 
+	el.attr('class', 'image-ground');
+	} else if(currentClass == "image-ground") { 
+	el.attr('class', 'image-rock');
+	 } else if(currentClass == "image-rock") { el.attr('class', 'image-lambda');
+	 } else if(currentClass == "image-lambda") { 
+	 el.attr('class', 'image-miner'); }
+	else if(currentClass == "image-miner") { 
+	el.attr('class', 'image-lift');
+	} else if(currentClass == "image-lift") { 
+	el.attr('class', 'image-opened-lift');
+	 }  else if(currentClass == "image-opened-lift")  { el.attr('class', 'image-unknown');}
+}
 function generateText(){
   var str_all = stringGenerator();
   $('#id_output').html(str_all);
@@ -175,6 +177,43 @@ function changemode(new_mode){
   if (new_mode == "image-ground"){ }
   if (new_mode == "image-wall"){}
   if (new_mode == "image-rock"){ }
+}
+
+function setCellClass(el){
+
+  if (input_mode != "image-empty"){
+    el.clearStyle;
+    el.attr('class', input_mode);
+   }
+   else defaultClickHandling(el);
+}
+function drawLine(x1, y1, x2, y2) {
+    deltaX = Math.abs(x2 - x1);
+    deltaY = Math.abs(y2 - y1);
+    signX = (x1 < x2 ? 1 : -1);
+    signY = (y1 < y2 ? 1 : -1);
+	
+    //
+    var error = deltaX - deltaY;
+    //
+	
+    setCellClass($('#cell_' + x2 +'_' + y2+' div:first'));
+    while(x1 != x2 || y1 != y2) {
+        //setPixel(x1, y1);
+		
+		setCellClass($('#cell_' + x1 +'_' + y1 + ' div:first'));
+        var error2 = error * 2;
+        //
+        if(error2 > -deltaY) {
+            error -= deltaY;
+            x1 += signX;
+        }
+        if(error2 < deltaX) {
+            error += deltaX;
+            y1 += signY;
+        }
+    }
+ 
 }
 
 
