@@ -1,0 +1,80 @@
+
+div .cell{
+border:1px solid grey;
+width: 48px;
+height: 48px;
+clear: none;
+display: table-cell;
+
+}
+div .row{
+
+}
+pre {
+width:100%;
+height:100%;
+border: 1px solid grey;
+}
+.image{
+width:100%;
+height:100%;
+}
+.image-empty{  
+  background-color: yellow;
+  width:100%;
+height:100%;
+}
+.image-unknown{
+  background-color:black;
+  width:100%;
+height:100%;
+}
+.image-bomb{
+  background-color:red;  
+  width:100%;
+height:100%;
+}
+
+.image-lift{
+  width:100%;
+height:100%;
+  background-image: url("../images/lift-e1342130254893.jpg");
+}
+
+  
+  .image-miner{
+    width:100%;
+height:100%;
+ background-image: url("../images/miner-e1342108738283.jpg");
+  }
+  
+  .image-lambda{
+  width:100%;
+height:100%;
+  background-image: url("../images/lambda-e1342108721895.jpg");
+  }
+.image-ground{
+width:100%;
+height:100%;
+  background-color: brown;
+  }
+.image-opened-lift{
+width:100%;
+height:100%;
+  background-color: green;
+  }  
+.image-wall{
+width:100%;
+height:100%;
+  background-image: url("../images/wall.jpg");
+  }
+.image-rock{
+width:100%;
+height:100%;
+  background-image: url("../images/rock.jpg");
+  }
+  
+  .generator_container{
+  width:auto;
+  height:auto;
+  }
