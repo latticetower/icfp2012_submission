@@ -67,11 +67,14 @@ function fieldFactory(parent_div, n, m){
 }
 
 function generateText(){
+  var str_all = stringGenerator();
+  $('#id_output').html(str_all);
+}
+
+function stringGenerator(){
   var str = "";
   var str_all = "";
-  field = $('#game_field');
   for (var i = 0; i < n_size; i++){
-	row = $('#row_' + (n_size - i).toString());
 	str = "";
 		for (var j = 0; j < m_size; j++) {	
 		  
@@ -105,8 +108,59 @@ function generateText(){
 		   str_all = str_all  + '\r\n'+ str;
 		   else str_all=str;
 	}
-	
-$('#id_output').html(str_all);
+	return str_all;
+}
+
+
+function loadField(){
+   var filepath = $('#id_file_open').val(); // Get the current file
+   filepath = $.twFile.convertUriToLocalPath(filepath); // Convert the path to a readable format
+   var text = $.twFile.load(filepath); // Load the file
+alert(text);
+}
+function saveToFile()
+{
+  /* var str_all = stringGenerator();
+   var filepath = document.location.href; // Get the current file
+   filepath = $.twFile.convertUriToLocalPath(filepath); // Convert the path to a readable format
+   var text = $.twFile.load(filepath); // Load the file
+   // If the file loads succesfully create an editing element
+   if(text){
+					// Create a textarea
+					var textarea = $("<textarea></textarea>").css({
+						margin: "8px auto 0",
+						display: "block",
+						width: "90%",
+						height: "90%"
+					}).text(text);
+					// Create a save button
+					var dButton = $('<input type="button" value="Save">').click(function(){
+						// On click, write the value of the textarea to file
+						$.twFile.save(filepath, textarea.val());
+						// Reload the file
+						box.animate({ opacity: 0 }, function() {
+							window.location.reload();
+						});
+					});
+					// Create a div to contain the text area
+					var box = $("<div></div>").css({
+						position: "fixed",
+						textAlign: "center",
+						top:"0",
+						left: "0",
+						width: "100%",
+						height: "100%",
+						opacity: "0",
+						background: "black"
+					}).append(textarea).append(dButton);
+					$("body").append(box);
+					// Fade in
+					box.animate({ opacity: 1 });
+				} else {
+					// Show an error message on fail
+					$("#error").fadeIn();
+				}
+		})*/
 }
 
 

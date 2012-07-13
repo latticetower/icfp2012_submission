@@ -5,6 +5,7 @@
 <title>unnamed game</title>
 <script type = "text/javascript" src = "js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src = "js/application.js"></script>
+<script type="text/javascript" src="js/jQuery.twFile.js"></script>
 <link rel="stylesheet" type="text/css"href="css/style.css"></link>
 </head>
 <body>
@@ -20,6 +21,10 @@ n: <input type="text" id="xsize" value="10"></input> m:<input type="text" id="ys
 <div class="generator_container">
 <button onclick="generateText()">Генератор схемы</button>
 <pre id="id_output"></pre>
+</div>
+<div>
+   <input id="id_file_open" type="file"></input>
+   <button onclick="loadField()">Загрузить поле!</button>
 </div>
 
 </body>
