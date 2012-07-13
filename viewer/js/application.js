@@ -3,6 +3,7 @@ $(document).ready(function() {
 n_size = 10;
 m_size = 20;
   fieldFactory($('#game_field'), n_size, m_size);
+  changemode('image-empty');
 });
 function sendAlert(){
 n_size = $('#xsize').val();
@@ -116,7 +117,7 @@ function loadField(){
    var filepath = $('#id_file_open').val(); // Get the current file
    filepath = $.twFile.convertUriToLocalPath(filepath); // Convert the path to a readable format
    var text = $.twFile.load(filepath); // Load the file
-alert(text);
+   alert(text);
 }
 function saveToFile()
 {
@@ -162,6 +163,18 @@ function saveToFile()
 				}
 		})*/
 }
-
+var input_mode= "image-empty";
+function changemode(new_mode){
+  input_mode = new_mode;
+  $("#id_input_mode").html(new_mode);
+  if (new_mode == "image-empty"){}
+  if (new_mode == "image-miner"){}
+  if (new_mode == "image-lambda"){}
+  if (new_mode == "image-opened-lift"){}
+  if (new_mode == "image-lift"){ }
+  if (new_mode == "image-ground"){ }
+  if (new_mode == "image-wall"){}
+  if (new_mode == "image-rock"){ }
+}
 
 

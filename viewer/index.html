@@ -15,6 +15,17 @@ n: <input type="text" id="xsize" value="10"></input> m:<input type="text" id="ys
 <button onclick="sendAlert()">Нажать</button>
 </div>
 <div class="game_board">
+<div id="command_buttons">
+<div class="cell image-empty" onclick="changemode('image-empty');"></div>
+<div class="cell image-ground" onclick="changemode('image-ground');"></div>
+<div class="cell image-lambda" onclick="changemode('image-lambda');"></div>
+<div class="cell image-miner" onclick="changemode('image-miner');"></div>
+<div class="cell image-wall" onclick="changemode('image-wall');"></div>
+<div class="cell image-rock" onclick="changemode('image-rock');"></div>
+<div class="cell image-lift" onclick="changemode('image-lift');"></div>
+<div class="cell image-opened-lift" onclick="changemode('image-opened-lift')"></div>
+<div>Текущий режим: <div id="id_input_mode"></div></div>
+</div>
 <div id="game_field" class="field"></div>
 <div class="game_header"></div>
 </div>
