@@ -27,20 +27,23 @@ function fieldFactory(parent_div, n, m){
 	
 	img = $('<div />',{class: 'image-unknown', xcoord: (n - i), ycoord:(m - j)});
 	img.bind('click', function(){
-	    //if (input_mode == 'image-empty') 
-	    //    defaultClickHandling($(this));
-		//else {
-				if (isFirstClick) {
+	    if (click_style=="point") {
+			if (input_mode == 'image-empty') 
+				defaultClickHandling($(this));
+			else setCellClass($(this));
+    
+		
+		}else{
+			if (isFirstClick) {
 				  startX = Number($(this).attr('xcoord'));
 				  startY = Number($(this).attr('ycoord'));
-				} else{
+			} else{
 				endX = Number($(this).attr('xcoord'));
-				
 				endY = Number($(this).attr('ycoord'));
-					drawLine(startX, startY, endX, endY) ;
-				}
-				isFirstClick = !isFirstClick;
-			//}
+				drawLine(startX, startY, endX, endY) ;
+			}
+			isFirstClick = !isFirstClick;
+		}
 					  //sendCommandToSocket("clicked on:"+$(this).parent().attr('xcoord')+','+$(this).parent().attr('ycoord')+'.');
 					  });
 	img.appendTo(cell);
@@ -168,7 +171,7 @@ function saveToFile()
 var input_mode= "image-empty";
 function changemode(new_mode){
   input_mode = new_mode;
-  $("#id_input_mode").html(new_mode);
+  $("#id_input_mode").html(new_mode+ ', '+click_style);
   if (new_mode == "image-empty"){}
   if (new_mode == "image-miner"){}
   if (new_mode == "image-lambda"){}
@@ -177,6 +180,15 @@ function changemode(new_mode){
   if (new_mode == "image-ground"){ }
   if (new_mode == "image-wall"){}
   if (new_mode == "image-rock"){ }
+}
+var click_style = "point";
+function changeClickStyle(){
+  if (click_style == "point"){
+    click_style = "line";
+   } else if (click_style == "line"){
+      click_style = "point";
+  }
+  $("#id_input_mode").html(new_mode + ', ' + click_style);
 }
 
 function setCellClass(el){
