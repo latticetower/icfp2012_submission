@@ -122,51 +122,44 @@ function loadField(){
    var filepath = $('#id_file_open').val(); // Get the current file
    filepath = $.twFile.convertUriToLocalPath(filepath); // Convert the path to a readable format
    var text = $.twFile.load(filepath); // Load the file
-   alert(text);
+   fieldFactoryFromText($('#game_field'), text);
 }
+
+function fieldFactoryFromText(parent_div, text){
+  var maxx = 0;
+  var lines = text.split('\n');
+  
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i].length > maxx) maxx = lines[i].length;
+  }
+ 
+  parent_div.empty();
+  fieldFactory(parent_div,  lines.length, maxx); 
+  
+  for (var i =0; i < lines.length; i++) {
+    for (var j = 0; j < lines[i].length; j++ ) {
+      var style = '';
+      if (lines[i].charAt(j) =='#') style = "image-wall";
+      if (lines[i].charAt(j) =='R')  style = "image-miner";
+      if (lines[i].charAt(j) =='\\') style = "image-lambda";
+      if (lines[i].charAt(j) =='L') style = "image-lift";
+	  if (lines[i].charAt(j) =='O') style = "image-opened-lift";
+      if (lines[i].charAt(j) =='*') style = "image-rock";
+      if (lines[i].charAt(j) =='.') style = "image-ground";
+	  $("#cell_" + (lines.length - i) + "_" + (maxx - j) ).children().removeClass();
+      $("#cell_" + (lines.length - i) + "_" + (maxx - j) ).children().addClass(style);
+    }
+  }
+}
+
 function saveToFile()
 {
-  /* var str_all = stringGenerator();
-   var filepath = document.location.href; // Get the current file
-   filepath = $.twFile.convertUriToLocalPath(filepath); // Convert the path to a readable format
-   var text = $.twFile.load(filepath); // Load the file
-   // If the file loads succesfully create an editing element
-   if(text){
-					// Create a textarea
-					var textarea = $("<textarea></textarea>").css({
-						margin: "8px auto 0",
-						display: "block",
-						width: "90%",
-						height: "90%"
-					}).text(text);
-					// Create a save button
-					var dButton = $('<input type="button" value="Save">').click(function(){
-						// On click, write the value of the textarea to file
-						$.twFile.save(filepath, textarea.val());
-						// Reload the file
-						box.animate({ opacity: 0 }, function() {
-							window.location.reload();
-						});
-					});
-					// Create a div to contain the text area
-					var box = $("<div></div>").css({
-						position: "fixed",
-						textAlign: "center",
-						top:"0",
-						left: "0",
-						width: "100%",
-						height: "100%",
-						opacity: "0",
-						background: "black"
-					}).append(textarea).append(dButton);
-					$("body").append(box);
-					// Fade in
-					box.animate({ opacity: 1 });
-				} else {
-					// Show an error message on fail
-					$("#error").fadeIn();
-				}
-		})*/
+var filepath=$("#id_file_save").val();		
+filepath = $.twFile.convertUriToLocalPath(filepath);
+var str_all = stringGenerator();
+
+$.twFile.save(filepath, str_all);
+
 }
 var input_mode= "image-empty";
 function changemode(new_mode){
