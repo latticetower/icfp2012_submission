@@ -1,33 +1,35 @@
 var n_size, m_size;
 $(document).ready(function() {
-n_size = 10;
-m_size = 20;
+ n_size = 10;
+ m_size = 20;
   fieldFactory($('#game_field'), n_size, m_size);
   changemode('image-empty');
 });
+
 function sendAlert(){
-n_size = $('#xsize').val();
-if (n_size == 0) n_size = 10;
-m_size = $('#ysize').val();
-if (m_size == 0) m_size = 10;
-fieldFactory($('#game_field'), n_size, m_size);
+  n_size = $('#ysize').val();
+  if (n_size == 0) n_size = 10;
+  m_size = $('#xsize').val();
+  if (m_size == 0) m_size = 10;
+  fieldFactory($('#game_field'), n_size, m_size);
 }
-var startX=1, startY=1;
+var startX = 1, startY = 1;
 var isFirstClick = true;
+
 function fieldFactory(parent_div, n, m){
   parent_div.empty();
   for (var i = 0; i < n; i++){
     row = $('<div />', {id: 'row_' + (n - i).toString(), class: 'row'});
 	row.appendTo(parent_div);
 	for (var j = 0; j < m; j++) {
-      cell = $('<div />', { id: 'cell_' + (n - i).toString() + '_' + (m - j).toString(), 
-	  class: 'cell column_' + (m - j).toString(), xcoord: (n - i), ycoord:(m - j)
+      cell = $('<div />', { id: 'cell_' + (j + 1).toString() + '_' + (n - i).toString() , 
+	  class: 'cell column_' + (1 + j).toString(), ycoord: (n - i), xcoord:(1 + j)
 	  });
     cell.appendTo(row);
 	
-	img = $('<div />',{class: 'image-unknown', xcoord: (n - i), ycoord:(m - j)});
+	img = $('<div />',{class: 'image-unknown', ycoord: (n - i), xcoord:(1+ j)});
 	img.bind('click', function(){
-	    if (click_style=="point") {
+	    if (click_style == "point") {
 			if (input_mode == 'image-empty') 
 				defaultClickHandling($(this));
 			else setCellClass($(this));
@@ -80,12 +82,13 @@ function generateText(){
 function stringGenerator(){
   var str = "";
   var str_all = "";
+ 
   for (var i = 0; i < n_size; i++){
 	str = "";
 		for (var j = 0; j < m_size; j++) {	
 		  
-		  cell = $('#cell_' + (n_size - i).toString() + '_' + (m_size - j).toString());
-		  img = $('#cell_' + (n_size - i).toString() + '_' + (m_size - j).toString() + ' div:first');
+		  cell = $('#cell_' + (1 + j).toString() + '_' + (n_size - i).toString()  );
+		  img = $('#cell_' + (1 + j).toString() + '_' + (n_size - i).toString()   + ' div:first');
 		  //img = cell.child();
 		  var currentClass = img.attr('class');
 		  if (currentClass == "image-unknown") {
@@ -98,7 +101,7 @@ function stringGenerator(){
 		    str = str + "R";
 		  }
 		  if (currentClass == "image-lambda") {
-		    str = str + "L";
+		    str = str + "\\";
 		  }
 		  if (currentClass == "image-ground") {
 		    str = str + ".";
@@ -109,10 +112,13 @@ function stringGenerator(){
 		 if (currentClass == "image-opened-lift") {
 		    str = str + "O";
 		 }
+		 if (currentClass == "image-lift") {
+		    str = str + "L";
+		 }
 		}
 		if (str_all != '')
 		   str_all = str_all  + '\r\n'+ str;
-		   else str_all=str;
+		   else str_all = str;
 	}
 	return str_all;
 }
@@ -132,13 +138,15 @@ function fieldFactoryFromText(parent_div, text){
   for (var i = 0; i < lines.length; i++) {
     if (lines[i].length > maxx) maxx = lines[i].length;
   }
- 
+ n_size = lines.length;
+ m_size = maxx;
   parent_div.empty();
   fieldFactory(parent_div,  lines.length, maxx); 
   
   for (var i =0; i < lines.length; i++) {
     for (var j = 0; j < lines[i].length; j++ ) {
       var style = '';
+	  if (lines[i].charAt(j) ==' ') style = "image-unknown";
       if (lines[i].charAt(j) =='#') style = "image-wall";
       if (lines[i].charAt(j) =='R')  style = "image-miner";
       if (lines[i].charAt(j) =='\\') style = "image-lambda";
@@ -146,8 +154,8 @@ function fieldFactoryFromText(parent_div, text){
 	  if (lines[i].charAt(j) =='O') style = "image-opened-lift";
       if (lines[i].charAt(j) =='*') style = "image-rock";
       if (lines[i].charAt(j) =='.') style = "image-ground";
-	  $("#cell_" + (lines.length - i) + "_" + (maxx - j) ).children().removeClass();
-      $("#cell_" + (lines.length - i) + "_" + (maxx - j) ).children().addClass(style);
+	  $("#cell_" + (1 + j) + "_" + (lines.length - i)  ).children().removeClass();
+      $("#cell_" + (1 + j) + "_" + (lines.length - i)  ).children().addClass(style);
     }
   }
 }
@@ -202,7 +210,7 @@ function drawLine(x1, y1, x2, y2) {
     var error = deltaX - deltaY;
     //
 	
-    setCellClass($('#cell_' + x2 +'_' + y2+' div:first'));
+    setCellClass($('#cell_' + x2 +'_' + y2 + ' div:first'));
     while(x1 != x2 || y1 != y2) {
         //setPixel(x1, y1);
 		
