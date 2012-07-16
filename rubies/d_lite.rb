@@ -51,16 +51,7 @@ class DStarLiteSolver
 	[]
   end
   
-  # s= source, t= target, w= weight
-  def add_vertex(s)
-    if (not @graph.has_key? s)
-      @graph[s] = {t => w}
-    else
-      @graph[s][t] = w
-    end
-    @nodes.merge [s,t]
-  end
- 
+
   def h(s1, s2)
     return @heuristics.call(s1, s2) if not @heuristics.nil?
 	return INFINITY
@@ -83,26 +74,26 @@ class DStarLiteSolver
 
   
   def key(s, s_start)
-    [minimal(@g[s], @rhs[s] + h(s_start, s)), minimal(@g[s], @rhs[s])] 
+    [minimal(g(s), @rhs[s]) + h(s_start, s), minimal(g(s), @rhs[s])] 
   end
   def minimal(x,y)
     return x if x < y
 	y
-  end
-  
-  
+  end  
   def min(x, &b)
-	s_dot = x[0]
-    x.each do |s| 
-	  if b.call(s, s_dot)
-	      s_dot = s
+	s2 = x[0]
+    x.each do |s1| 
+	  if b.call(s1, s2)
+	      s2 = s1
 	  end 
 	end
-	s_dot
+	s2
   end
   def g(s_dot)
     if not @g.has_key?(s_dot)
 	  @g[s_dot] = INFINITY
+	else
+	return @g[s_dot]
 	end
 	INFINITY
   end
@@ -112,8 +103,11 @@ class DStarLiteSolver
 	  @g[s] = INFINITY
 	end
 	if (not eql?(s, s_goal))
-	  s_current = min(succ(s)){|s_dot, s2| c(s, s_dot) + g(s_dot) < c(s, s2) + g(s2)}
+	  s_current = min(succ(s)) { |s1, s2| c(s, s1) + g(s1) < c(s, s2) + g(s2)}
+	  
 	  @rhs[s] = c(s, s_current) + g(s_current)
+	#  p "  changed rgs[#{s}]=#{@rhs[s]}"
+#	  p " #{s} #{succ(s).collect{|x| {x => c(s,x)+ g(x)}}} s_current  = #{s_current}, rhs = #{@rhs[s]}"
 	end
 	if (@opened_set.include?(s))
 	  @opened_set.delete(s)
@@ -125,12 +119,12 @@ class DStarLiteSolver
   
   def compute_shortest_path(s_start, s_goal)
     s_current = min(@opened_set.keys){|s1, s2| less_keys(key(s1, s_start), key(s2, s_start))}
-    while ( less_keys(key(s_current, s_start), key(s_start, s_start)) or @rhs[s_start] != @g[s_start])
+    while (less_keys(key(s_current, s_start), key(s_start, s_start)) or @rhs[s_start] != @g[s_start])
 	  @opened_set.delete(s_current)
-	  p s_current
-	 
-	  if (@g[s_current] > @rhs[s_current])
+	#  p "current vertex: #{s_current} #{s_start} with key #{key(s_current, s_start)}"
+	  if (g(s_current) > @rhs[s_current])
 	    @g[s_current] = @rhs[s_current] 
+	#	p "  g[s_current]: #{s_current} -> #{@rhs[s_current]}"
 		pred(s_current).each do |s_dot|
 		   update_state(s_dot, s_start, s_goal)
 	    end 
@@ -156,27 +150,30 @@ class DStarLiteSolver
 	  @rhs[s_start] = INFINITY
 	  @g[s_goal] = INFINITY
 	  @rhs[s_goal] = 0
+
 	 
 	  @opened_set = {}
 
+
+
 	  @opened_set[s_goal] = key(s_goal, s_start)
-while true do
+#while true do
   compute_shortest_path(s_start, s_goal)
-p 'computed path:'
-  p @g
-  p @rhs
+
+
   if changes_detected?
     changed_nodes.each do |u|
       update_state(u, s_start, s_goal)
     end	  
 	  #publish current e suboptimal solution
-	  update_state(u, s_start,s_goal)
-  else 
-  p 'return'
-  p @g
-  p @rhs
-    return   
-  end
+	  #update_state(u, s_start,s_goal)
+ # else 
+ # p 'return '
+ # p @g
+ # p @rhs
+ # gets()
+ #   return   
+ # end
   
 
 end

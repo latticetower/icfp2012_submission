@@ -1,5 +1,7 @@
 require 'c:/42/icfp2012/rubies/graph.rb'
+#require 'c:/42/icfp2012/rubies/ada_solver.rb'
 require 'c:/42/icfp2012/rubies/d_lite.rb'
+
 INFILE = "c:/42/icfp2012/rubies/levels/contest1.map" 
 #, "r"
 #outfile = File.new("c:/42/icfp2012/rubies/moves/result.txt", "w")
@@ -13,75 +15,85 @@ def get_pred(vertex)
   preds = []
   x = vertex[0]
   y = vertex[1]
-  if not reachable?(@arr[x][y])
+  if not reachable?(@arr[y][x])
     return []
   end
   if (x > 0) 
-    if reachable?(@arr[x - 1][y])
+    if reachable?(@arr[y][x - 1])
 	  preds.push([x-1, y])
 	end
   end
-  if (x < @arr.length - 1)
-    if reachable?(@arr[x + 1][y])
+  if (x < @arr[y].length - 1)
+    if reachable?(@arr[y][x + 1])
 	  preds.push([x + 1, y])
 	end
   end
   if (y > 0) 
-    if reachable?(@arr[x][y - 1])
+    if reachable?(@arr[y - 1][x])
 	  preds.push([x, y - 1])
 	end
   end
-  if (y < @arr[x].length - 1)
-    if reachable?(@arr[x][y + 1])
+  if (y < @arr.length - 1)
+    if reachable?(@arr[y + 1][x])
 	  preds.push([x, y + 1])
 	end
   end
   preds
 end
+
+def compute_heuristics(s1, s2)
+ (s1[0] - s2[0]).abs + (s1[1] - s2[1]).abs
+end
+
 def get_succ(vertex)
   succs = []
   x = vertex[0]
   y = vertex[1]
-  if not reachable?(@arr[x][y])
+  if not reachable?(@arr[y][x])
     return []
   end
   if (x > 0) 
-    if reachable?(@arr[x - 1][y])
-	  succs.push([x-1, y])
+    if reachable?(@arr[y][x - 1])
+	  succs.push([x - 1, y])
 	end
   end
-  if (x < @arr.length - 1)
-    if reachable?(@arr[x + 1][y])
+  if (x < @arr[y].length - 1)
+    if reachable?(@arr[y][x + 1])
 	  succs.push([x + 1, y])
 	end
   end
   if (y > 0) 
-    if reachable?(@arr[x][y - 1])
+    if reachable?(@arr[y - 1][x])
 	  succs.push([x, y - 1])
 	end
   end
-  if (y < @arr[x].length - 1)
-    if reachable?(@arr[x][y + 1])
+  if (y < @arr.length - 1)
+    if reachable?(@arr[y + 1][x])
 	  succs.push([x, y + 1])
 	end
   end
   succs
 end
+
 def changes?
-false
+  false
 end
+
 def changed_nodes
 []
 end
+
 def profit(v)
-  if @arr[v[0]][v[1]] == '\\'
-    return -25
+  if @arr[v[1]][v[0]] == '\\'
+    return 0 #-25
   end
   0
 end
 def get_costs(u, v)
-  if reachable?(@arr[v[0]][v[1]])
-    return 1 + profit(v)
+
+  if reachable?(@arr[v[1]][v[0]])
+  
+    return 1 + profit(v) if (u[1]-v[1]).abs+(u[0]-v[0]).abs == 1
   end
   INFINITY
 end
@@ -108,15 +120,15 @@ end
 
 g = DStarLiteSolver.new
 
-g.set_heuristics({:h => lambda{|s1, s2| 3},
+g.set_heuristics({:h => lambda{|s1, s2| compute_heuristics(s1, s2)},
 :pred => lambda{|vertex| get_pred(vertex)},
 :succ => lambda{|vertex| get_succ(vertex)},
 :costs => lambda{|u, v| get_costs(u, v)},
 :change_function => lambda{changes? },
 :changed_nodes => lambda{changed_nodes },
-:eql => lambda{|u,v| u[0]==v[0] and u[1] ==v[1]}
+:eql => lambda{|u,v| u[0] == v[0] and u[1] == v[1]}
 })
-p reachable? ([1,1])
-p reachable? ([2,2])
-g.mainfunc([1,1],[4,2])
+
+
+g.mainfunc([1,4],[4,0])
 #p g.shortest_distances('a')
