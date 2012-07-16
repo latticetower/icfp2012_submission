@@ -7,6 +7,24 @@ INFILE = "c:/42/icfp2012/rubies/levels/contest1.map"
 #outfile = File.new("c:/42/icfp2012/rubies/moves/result.txt", "w")
 INFINITY = 1 << 64
 @arr = Array.new
+
+@start = nil
+@end = nil
+def get_start()
+	@arr.each do |i|
+	@arr[i].each do |j|
+	 return [i,j] if @arr[i][j] == 'R'
+	end
+	end
+end
+
+def get_end()
+	@arr.each do |i|
+	@arr[i].each do |j|
+	 return [i,j] if @arr[i][j] == 'L'
+	end
+	end
+end
 def reachable? (value)
   (value != '#' and value != '*')
 end
