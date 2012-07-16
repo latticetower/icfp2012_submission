@@ -15,26 +15,29 @@ def get_pred(vertex)
   preds = []
   x = vertex[0]
   y = vertex[1]
-  if not reachable?(@arr[y][x])
+  if (@arr.length < y)
+    return []
+  end
+  if not reachable?(@arr[x][y])
     return []
   end
   if (x > 0) 
-    if reachable?(@arr[y][x - 1])
-	  preds.push([x-1, y])
+    if reachable?(@arr[x - 1][y])
+	  preds.push([x - 1, y])
 	end
   end
-  if (x < @arr[y].length - 1)
-    if reachable?(@arr[y][x + 1])
+  if (x < @arr.length - 1)
+    if reachable?(@arr[x + 1][y])
 	  preds.push([x + 1, y])
 	end
   end
   if (y > 0) 
-    if reachable?(@arr[y - 1][x])
+    if reachable?(@arr[x][y - 1])
 	  preds.push([x, y - 1])
 	end
   end
-  if (y < @arr.length - 1)
-    if reachable?(@arr[y + 1][x])
+  if (y < @arr[x].length - 1)
+    if reachable?(@arr[x][y + 1])
 	  preds.push([x, y + 1])
 	end
   end
@@ -49,26 +52,26 @@ def get_succ(vertex)
   succs = []
   x = vertex[0]
   y = vertex[1]
-  if not reachable?(@arr[y][x])
+  if not reachable?(@arr[x][y])
     return []
   end
   if (x > 0) 
-    if reachable?(@arr[y][x - 1])
+    if reachable?(@arr[x - 1][y])
 	  succs.push([x - 1, y])
 	end
   end
-  if (x < @arr[y].length - 1)
-    if reachable?(@arr[y][x + 1])
+  if (x < @arr.length - 1)
+    if reachable?(@arr[x + 1][y])
 	  succs.push([x + 1, y])
 	end
   end
   if (y > 0) 
-    if reachable?(@arr[y - 1][x])
+    if reachable?(@arr[x][y - 1])
 	  succs.push([x, y - 1])
 	end
   end
-  if (y < @arr.length - 1)
-    if reachable?(@arr[y + 1][x])
+  if (y < @arr[x].length - 1)
+    if reachable?(@arr[x][y + 1])
 	  succs.push([x, y + 1])
 	end
   end
@@ -84,16 +87,15 @@ def changed_nodes
 end
 
 def profit(v)
-  if @arr[v[1]][v[0]] == '\\'
+  if @arr[v[0]][v[1]] == '\\'
     return 0 #-25
   end
   0
 end
 def get_costs(u, v)
-
-  if reachable?(@arr[v[1]][v[0]])
+  if reachable?(@arr[v[0]][v[1]])
   
-    return 1 + profit(v) if (u[1]-v[1]).abs+(u[0]-v[0]).abs == 1
+    return 1 + profit(v) if (u[0]-v[0]).abs+(u[1]-v[1]).abs == 1
   end
   INFINITY
 end
@@ -126,7 +128,7 @@ g.set_heuristics({:h => lambda{|s1, s2| compute_heuristics(s1, s2)},
 :costs => lambda{|u, v| get_costs(u, v)},
 :change_function => lambda{changes? },
 :changed_nodes => lambda{changed_nodes },
-:eql => lambda{|u,v| u[0] == v[0] and u[1] == v[1]}
+:eql => lambda{|u, v| u[0] == v[0] and u[1] == v[1]}
 })
 
 
