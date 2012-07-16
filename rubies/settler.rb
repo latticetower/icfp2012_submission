@@ -2,7 +2,7 @@ require 'c:/42/icfp2012/rubies/graph.rb'
 #require 'c:/42/icfp2012/rubies/ada_solver.rb'
 require 'c:/42/icfp2012/rubies/d_lite.rb'
 
-INFILE = "c:/42/icfp2012/rubies/levels/contest1.map" 
+INFILE = "c:/42/icfp2012/rubies/levels/contest9.map" 
 #, "r"
 #outfile = File.new("c:/42/icfp2012/rubies/moves/result.txt", "w")
 INFINITY = 1 << 64

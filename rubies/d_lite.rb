@@ -171,12 +171,15 @@ return false if (pair2 == nil)
   s1_length = @g[s_start]
 s1 = s_start
   p s1
+  if @g[s_start] < INFINITY
   while s1 != s_goal do
    s1 = @g.select{|k, v| v == s1_length - 1 and pred(k).include?(s1) }.keys.first
    s1_length = s1_length-1
    p s1
   end
-
+  else 
+  p "A"
+  end
   if changes_detected?
     changed_nodes.each do |u|
       update_state(u, s_start, s_goal)
